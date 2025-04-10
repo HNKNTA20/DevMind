@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Регистрация | DevMind</title>
+  <style>
+    :root {
+      --primary: #00E0FF;
+      --secondary: #FF6BFF;
+      --dark: #0F172A;
+      --light: #F8FAFC;
+      --gray: #94A3B8;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    
+    body {
+      background-color: #F1F5F9;
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    .auth-container {
+      display: flex;
+      width: 100%;
+    }
+    
+    .auth-left {
+      flex: 1;
+      background: linear-gradient(135deg, var(--dark), #1E293B);
+      padding: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .auth-left::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0,224,255,0.1) 0%, transparent 70%);
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 40px;
+      z-index: 1;
+    }
+    
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+    }
+    
+    .logo-text {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .auth-left h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-align: center;
+      z-index: 1;
+    }
+    
+    .auth-left p {
+      color: var(--gray);
+      text-align: center;
+      max-width: 500px;
+      line-height: 1.6;
+      margin-bottom: 40px;
+      z-index: 1;
+    }
+    
+    .features {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      z-index: 1;
+    }
+    
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .feature-icon {
+      width: 24px;
+      height: 24px;
+      color: var(--primary);
+    }
+    
+    .auth-right {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+    }
+    
+    .auth-form {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      padding: 50px;
+      width: 100%;
+      max-width: 480px;
+    }
+    
+    .auth-form h2 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      color: var(--dark);
+    }
+    
+    .form-subtitle {
+      color: var(--gray);
+      margin-bottom: 30px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--dark);
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 224, 255, 0.2);
+    }
+    
+    .password-strength {
+      height: 4px;
+      background: #E2E8F0;
+      border-radius: 2px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+    
+    .strength-bar {
+      height: 100%;
+      width: 0;
+      background: #FF6BFF;
+      transition: width 0.3s;
+    }
+    
+    .terms {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    
+    .terms-checkbox {
+      margin-top: 3px;
+    }
+    
+    .terms-text {
+      font-size: 14px;
+      color: var(--gray);
+    }
+    
+    .terms-text a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+    
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 224, 255, 0.3);
+    }
+    
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 25px 0;
+      color: var(--gray);
+      font-size: 14px;
+    }
+    
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #E2E8F0;
+      margin: 0 10px;
+    }
+    
+    .login-link {
+      text-align: center;
+      margin-top: 30px;
+      color: var(--gray);
+    }
+    
+    .login-link a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    @media (max-width: 992px) {
+      .auth-container {
+        flex-direction: column;
+      }
+      
+      .auth-left {
+        padding: 40px 20px;
+      }
+      
+      .auth-right {
+        padding: 40px 20px;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .auth-form {
+        padding: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <!-- Левая часть с описанием -->
+    <div class="auth-left">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 0C8.96 0 0 8.96 0 20C0 31.04 8.96 40 20 40C31.04 40 40 31.04 40 20C40 8.96 31.04 0 20 0ZM15 30L8 23L10.82 20.18L15 24.34L29.18 10.16L32 13L15 30Z" fill="#00E0FF"/>
+          <path d="M15 30L8 23L10.82 20.18L15 24.34L29.18 10.16L32 13L15 30Z" fill="#FF6BFF" style="mix-blend-mode: multiply;"/>
+        </svg>
+        <span class="logo-text">DevMind</span>
+      </div>
+      
+      <h1>Начните обучение сегодня</h1>
+      <p>Присоединяйтесь к сообществу из 15,000+ разработчиков и получите доступ к лучшим курсам по программированию</p>
+      
+      <div class="features">
+        <div class="feature-item">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M5 13l4 4L19 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Доступ ко всем курсам платформы</span>
+        </div>
+        <div class="feature-item">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M5 13l4 4L19 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Персональный ментор на время обучения</span>
+        </div>
+        <div class="feature-item">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M5 13l4 4L19 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Гарантия трудоустройства</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Правая часть с формой -->
+    <div class="auth-right">
+      <div class="auth-form">
+        <h2>Создать аккаунт</h2>
+        <p class="form-subtitle">Заполните форму для регистрации</p>
+        
+        <form action="/register" method="POST">
+          <div class="form-group">
+            <label for="name" class="form-label">Имя</label>
+            <input type="text" id="name" name="name" class="form-input" placeholder="Ваше имя" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" name="email" class="form-input" placeholder="your@email.com" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="password" class="form-label">Пароль</label>
+            <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required minlength="8">
+            <div class="password-strength">
+              <div class="strength-bar" id="strength-bar"></div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="confirm-password" class="form-label">Подтвердите пароль</label>
+            <input type="password" id="confirm-password" name="confirm-password" class="form-input" placeholder="••••••••" required>
+          </div>
+          
+          <div class="terms">
+            <input type="checkbox" id="terms" class="terms-checkbox" required>
+            <label for="terms" class="terms-text">
+              Я согласен с <a href="/terms">Условиями использования</a> и <a href="/privacy">Политикой конфиденциальности</a>
+            </label>
+          </div>
+          
+          <button type="submit" class="submit-btn">Зарегистрироваться</button>
+        </form>
+        
+        <div class="divider">Уже есть аккаунт?</div>
+        
+        <p class="login-link"><a href="/login">Войдите в существующий аккаунт</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Индикатор сложности пароля
+    const passwordInput = document.getElementById('password');
+    const strengthBar = document.getElementById('strength-bar');
+    
+    passwordInput.addEventListener('input', function() {
+      const password = this.value;
+      let strength = 0;
+      
+      // Проверка длины
+      if (password.length >= 8) strength += 1;
+      if (password.length >= 12) strength += 1;
+      
+      // Проверка на наличие цифр
+      if (/\d/.test(password)) strength += 1;
+      
+      // Проверка на спецсимволы
+      if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength += 1;
+      
+      // Проверка на буквы разного регистра
+      if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 1;
+      
+      // Обновление индикатора
+      const width = strength * 20;
+      strengthBar.style.width = `${width}%`;
+      
+      // Изменение цвета в зависимости от сложности
+      if (strength <= 2) {
+        strengthBar.style.background = '#FF6BFF';
+      } else if (strength <= 4) {
+        strengthBar.style.background = '#00E0FF';
+      } else {
+        strengthBar.style.background = '#00D1FF';
+      }
+    });
+    
+    // Проверка совпадения паролей
+    const confirmPassword = document.getElementById('confirm-password');
+    confirmPassword.addEventListener('input', function() {
+      if (this.value !== passwordInput.value) {
+        this.setCustomValidity('Пароли не совпадают');
+      } else {
+        this.setCustomValidity('');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Все курсы | DevMind</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --primary: #00E0FF;
+      --secondary: #FF6BFF;
+      --dark: #0F172A;
+      --light: #F8FAFC;
+      --gray: #94A3B8;
+      --card-bg: #1E293B;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    
+    body {
+      background-color: #F1F5F9;
+      color: #0F172A;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    /* Header */
+    .header {
+        background: var(--bg-dark);
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+    }
+    
+    .logo-text {
+      font-size: 20px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    /* Hero section */
+    .courses-hero {
+      background: linear-gradient(135deg, var(--dark), #1E293B);
+      color: white;
+      padding: 80px 0;
+      text-align: center;
+    }
+    
+    .courses-hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    
+    .courses-hero p {
+      color: var(--gray);
+      max-width: 700px;
+      margin: 0 auto 30px;
+      line-height: 1.6;
+    }
+    
+    .search-bar {
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 15px 20px;
+      border-radius: 30px;
+      border: none;
+      font-size: 16px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .search-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 224, 255, 0.3);
+    }
+    
+    .search-btn {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+    
+    /* Filters */
+    .filters {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 40px 0 30px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    .filter-group {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      background: white;
+      border: 1px solid #E2E8F0;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    .sort-select {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid #E2E8F0;
+      background: white;
+      cursor: pointer;
+    }
+    
+    /* Courses grid */
+    .courses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+      margin-bottom: 60px;
+    }
+    
+    .course-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .course-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 224, 255, 0.1);
+    }
+    
+    .course-image {
+      height: 160px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .course-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+    
+    .course-card:hover .course-image img {
+      transform: scale(1.05);
+    }
+    
+    .course-tag {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--secondary);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .course-content {
+      padding: 20px;
+    }
+    
+    .course-category {
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    
+    .course-title {
+      font-size: 18px;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    
+    .course-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--gray);
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+    
+    .course-rating {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #F59E0B;
+    }
+    
+    .course-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+    }
+    
+    .course-price {
+      font-size: 20px;
+      font-weight: 700;
+    }
+    
+    .course-price.free {
+      color: #10B981;
+    }
+    
+    .enroll-btn {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    
+    .enroll-btn:hover {
+      transform: translateY(-2px);
+    }
+    
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 80px;
+    }
+    
+    .page-btn {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 1px solid #E2E8F0;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .page-btn:hover, .page-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    /* Footer */
+    .footer {
+      background: var(--dark);
+      color: white;
+      padding: 60px 0 20px;
+    }
+    
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+    
+    .footer-title {
+      font-size: 18px;
+      margin-bottom: 20px;
+      position: relative;
+      padding-bottom: 10px;
+    }
+    
+    .footer-title:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+    
+    .footer-links {
+      list-style: none;
+    }
+    
+    .footer-links li {
+      margin-bottom: 12px;
+    }
+    
+    .footer-links a {
+      color: var(--gray);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+    
+    .footer-bottom {
+      border-top: 1px solid #1E293B;
+      padding-top: 20px;
+      text-align: center;
+      color: var(--gray);
+      font-size: 14px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .courses-hero {
+        padding: 60px 0;
+      }
+      
+      .courses-hero h1 {
+        font-size: 2rem;
+      }
+      
+      .filters {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .course-card {
+        max-width: 100%;
+      }
+    }
+
+    /* Анимация загрузки */
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      font-size: 18px;
+      color: var(--primary);
+    }
+
+    .no-results {
+      display: none;
+      text-align: center;
+      grid-column: 1 / -1;
+      padding: 40px;
+      color: var(--gray);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header__inner">
+        <!-- Логотип с иконкой кода -->
+        <a href="/" class="header__logo">
+          <svg class="logo-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 8L3 12L7 16" stroke="#00E0FF" stroke-width="2" stroke-linecap="round"/>
+            <path d="M17 8L21 12L17 16" stroke="#00E0FF" stroke-width="2" stroke-linecap="round"/>
+            <path d="M14 4L10 20" stroke="#FF6BFF" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span>DevMind</span>
+        </a>
+        
+        <!-- Навигация -->
+        <nav class="header__nav">
+          <ul class="header__menu">
+            <li><a href="courses.html">Все курсы</a></li>
+            <li><a href="index.html#about">О компании</a></li>
+            <li><a href="webenars.html">Вебинары</a></li>
+          </ul>
+        </nav>
+        
+        <!-- Поиск и действия -->
+        <div class="header__actions">
+          <button class="search-btn" aria-label="Поиск">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#A0AEC0" stroke-width="2"/>
+              <path d="M21 21L16.65 16.65" stroke="#A0AEC0" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <a href="/cart" class="cart-btn" aria-label="Корзина">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z" stroke="#A0AEC0" stroke-width="2"/>
+              <path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z" stroke="#A0AEC0" stroke-width="2"/>
+              <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6" stroke="#A0AEC0" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </a>
+          <a href="/login" class="btn btn--login">Войти</a>
+        </div>
+        
+        <!-- Бургер-меню -->
+        <button class="header__burger" aria-label="Меню">
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero section -->
+  <section class="courses-hero">
+    <div class="container">
+      <h1>Все курсы DevMind</h1>
+      <p>Выберите курс по вашему уровню и интересам. Освойте востребованные IT-профессии с нуля до профессионального уровня.</p>
+      
+      <div class="search-bar">
+        <input type="text" class="search-input" placeholder="Поиск курсов..." id="searchInput">
+        <button class="search-btn" id="searchBtn">Найти</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <main class="container">
+    <!-- Filters -->
+    <div class="filters">
+      <div class="filter-group">
+        <button class="filter-btn active" data-category="all">Все</button>
+        <button class="filter-btn" data-category="programming">Программирование</button>
+        <button class="filter-btn" data-category="data">Анализ данных</button>
+        <button class="filter-btn" data-category="security">Кибербезопасность</button>
+        <button class="filter-btn" data-category="design">Дизайн</button>
+      </div>
+      
+      <select class="sort-select" id="sortSelect">
+        <option value="default">Сортировать по</option>
+        <option value="popularity">Популярности</option>
+        <option value="newest">Новизне</option>
+        <option value="rating">Рейтингу</option>
+        <option value="price-asc">Цене (по возрастанию)</option>
+        <option value="price-desc">Цене (по убыванию)</option>
+      </select>
+    </div>
+    
+    <!-- Loading indicator -->
+    <div class="loading" id="loadingIndicator">Загрузка курсов...</div>
+    
+    <!-- No results message -->
+    <div class="no-results" id="noResults">
+      <h3>Ничего не найдено</h3>
+      <p>Попробуйте изменить параметры поиска или фильтры</p>
+    </div>
+    
+    <!-- Courses grid -->
+    <div class="courses-grid" id="coursesGrid">
+      <!-- Курсы будут загружаться динамически -->
+    </div>
+    
+    <!-- Pagination -->
+    <div class="pagination" id="pagination">
+      <!-- Пагинация будет генерироваться динамически -->
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="devmind-footer">
+    <div class="footer-container">
+      <!-- Основные разделы -->
+      <div class="footer-grid">
+        <!-- Колонка 1: О компании -->
+        <div class="footer-col">
+          <h3 class="footer-title">DevMind</h3>
+          <p class="footer-about">Онлайн-академия IT-профессий с гарантированным трудоустройством. Обучаем востребованным специальностям с 2015 года.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="ВКонтакте">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#94A3B8"><path d="M12.65 15.92h.85c1.15 0 1.73-.38 1.73-1.16 0-.6-.35-.95-1.1-1.16l-1.45-.37c-1.05-.27-1.5-.75-1.5-1.5 0-1 .85-1.7 2.2-1.7h.85v1.5h-.6c-.7 0-1.05.22-1.05.65 0 .3.2.5.7.6l1.4.35c1.1.28 1.6.78 1.6 1.6 0 1.1-.9 1.85-2.4 1.85h-.9v1.5zm-7.5-3.9c0-2.5 1.5-4.4 4.1-4.4h2.4v1.5h-2.4c-1.8 0-2.9 1.1-2.9 2.9v.8h2.9v1.5H6.75v.6c0 1.7 1.1 2.8 2.9 2.8h2.4v1.5h-2.4c-2.6 0-4.1-1.9-4.1-4.4v-2.9z"/></svg>
+            </a>
+            <a href="#" aria-label="Telegram">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#94A3B8"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.25 2.34-1.32 8.02-1.87 10.6-.12.55-.36.73-.73.73-.63 0-1.76-1.1-2.72-2.1-1.5-1.37-2.35-2.23-3.8-3.6-.53-.48-.96-1.03-.36-1.85.26-.35 3.65-3.46 3.76-3.75.03-.06.05-.14.02-.22-.04-.08-.12-.12-.22-.08-.4.15-7.16 4.6-7.6 4.83-.55.28-.54.53-.16.85.35.3 1.1.9 1.58 1.3.58.47 1.03.72 1.55.72.52 0 .75-.25 1.03-.9.65-1.65 1.98-5.72 2.3-7.5.07-.3.02-.43-.3-.43-.1 0-.5.06-1.06.25l-1.5.5c-.6.2-.68-.12-.68-.37 0-.3.5-1.1.9-1.5.8-.75 1.7-1.1 2.6-1.1.3 0 .52.02.7.3.2.3.15.8.03 1.1z"/></svg>
+            </a>
+            <a href="#" aria-label="YouTube">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#94A3B8"><path d="M10 15l5.19-3L10 9v6zm11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
+            </a>
+          </div>
+        </div>
+  
+        <!-- Колонка 2: Навигация -->
+        <div class="footer-col">
+          <h3 class="footer-title">Навигация</h3>
+          <ul class="footer-links">
+            <li><a href="#courses">Все курсы</a></li>
+            <li><a href="#about">О компании</a></li>
+            <li><a href="#reviews">Вебинары</a></li>
+          </ul>
+        </div>
+  
+        <!-- Колонка 3: Курсы -->
+        <div class="footer-col">
+          <h3 class="footer-title">Курсы</h3>
+          <ul class="footer-links">
+            <li><a href="#web-dev">Веб-разработка</a></li>
+            <li><a href="#data-science">Data Science</a></li>
+            <li><a href="#mobile-dev">Мобильная разработка</a></li>
+            <li><a href="#cybersecurity">Кибербезопасность</a></li>
+            <li><a href="#game-dev">GameDev</a></li>
+          </ul>
+        </div>
+  
+        <!-- Колонка 4: Контакты -->
+        <div class="footer-col">
+          <h3 class="footer-title">Контакты</h3>
+          <address class="footer-contacts">
+            <div class="contact-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#00E0FF"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+              <a href="mailto:info@devmind.ru">info@devmind.ru</a>
+            </div>
+            <div class="contact-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#00E0FF"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+              <a href="tel:+78001234567">8 (800) 123-45-67</a>
+            </div>
+            <div class="contact-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#00E0FF"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+              <span>г. Москва, ул. Техническая, 42</span>
+            </div>
+          </address>
+        </div>
+      </div>
+  
+      <!-- Нижняя часть футера -->
+      <div class="footer-bottom">
+        <div class="footer-copyright">© 2023 DevMind. Все права защищены.</div>
+        <div class="footer-legal">
+          <a href="#">Политика конфиденциальности</a>
+          <a href="#">Договор-оферта</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Данные курсов
+    const coursesData = [
+      {
+        id: 1,
+        title: "Fullstack разработка на JavaScript",
+        category: "programming",
+        image: "https://source.unsplash.com/random/600x400/?web,development",
+        tag: "Топ-2024",
+        duration: "12 месяцев",
+        rating: 4.9,
+        reviews: 240,
+        price: 24900,
+        isFree: false,
+        popularity: 95,
+        date: "2023-01-15"
+      },
+      {
+        id: 2,
+        title: "Data Science с нуля",
+        category: "data",
+        image: "https://source.unsplash.com/random/600x400/?python,data",
+        tag: "Новинка",
+        duration: "10 месяцев",
+        rating: 4.8,
+        reviews: 187,
+        price: 27500,
+        isFree: false,
+        popularity: 88,
+        date: "2023-03-20"
+      },
+      {
+        id: 3,
+        title: "Ethical Hacking",
+        category: "security",
+        image: "https://source.unsplash.com/random/600x400/?security,hacking",
+        tag: "С нуля",
+        duration: "8 месяцев",
+        rating: 4.7,
+        reviews: 156,
+        price: 22000,
+        isFree: false,
+        popularity: 82,
+        date: "2023-02-10"
+      },
+      {
+        id: 4,
+        title: "Разработка под iOS и Android",
+        category: "programming",
+        image: "https://source.unsplash.com/random/600x400/?mobile,development",
+        duration: "9 месяцев",
+        rating: 4.8,
+        reviews: 203,
+        price: 25800,
+        isFree: false,
+        popularity: 90,
+        date: "2022-11-05"
+      },
+      {
+        id: 5,
+        title: "UX/UI дизайн с нуля",
+        category: "design",
+        image: "https://source.unsplash.com/random/600x400/?ui,design",
+        duration: "6 месяцев",
+        rating: 4.9,
+        reviews: 178,
+        price: 20500,
+        isFree: false,
+        popularity: 85,
+        date: "2023-04-15"
+      },
+      {
+        id: 6,
+        title: "Разработка игр на Unity",
+        category: "programming",
+        image: "https://source.unsplash.com/random/600x400/?game,development",
+        tag: "Новинка",
+        duration: "7 месяцев",
+        rating: 4.6,
+        reviews: 132,
+        price: 23000,
+        isFree: false,
+        popularity: 78,
+        date: "2023-05-01"
+      },
+      {
+        id: 7,
+        title: "DevOps с нуля",
+        category: "programming",
+        image: "https://source.unsplash.com/random/600x400/?devops,cloud",
+        duration: "10 месяцев",
+        rating: 4.7,
+        reviews: 145,
+        price: 28500,
+        isFree: false,
+        popularity: 80,
+        date: "2022-12-20"
+      },
+      {
+        id: 8,
+        title: "Машинное обучение",
+        category: "data",
+        image: "https://source.unsplash.com/random/600x400/?machine,learning",
+        duration: "11 месяцев",
+        rating: 4.9,
+        reviews: 210,
+        price: 0,
+        isFree: true,
+        popularity: 92,
+        date: "2023-01-30"
+      }
+    ];
+
+    // DOM элементы
+    const coursesGrid = document.getElementById('coursesGrid');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const sortSelect = document.getElementById('sortSelect');
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const noResults = document.getElementById('noResults');
+    const pagination = document.getElementById('pagination');
+
+    // Текущие параметры фильтрации
+    let currentCategory = 'all';
+    let currentSort = 'default';
+    let currentSearch = '';
+    let currentPage = 1;
+    const coursesPerPage = 6;
+
+    // Инициализация страницы
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCourses();
+      setupEventListeners();
+    });
+
+    // Настройка обработчиков событий
+    function setupEventListeners() {
+      // Фильтрация по категориям
+      filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+          currentCategory = button.dataset.category;
+          currentPage = 1;
+          renderCourses();
+        });
+      });
+
+      // Сортировка
+      sortSelect.addEventListener('change', () => {
+        currentSort = sortSelect.value;
+        renderCourses();
+      });
+
+      // Поиск
+      searchBtn.addEventListener('click', () => {
+        currentSearch = searchInput.value.trim().toLowerCase();
+        currentPage = 1;
+        renderCourses();
+      });
+
+      // Поиск при нажатии Enter
+      searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          currentSearch = searchInput.value.trim().toLowerCase();
+          currentPage = 1;
+          renderCourses();
+        }
+      });
+    }
+
+    // Рендеринг курсов
+    function renderCourses() {
+      loadingIndicator.style.display = 'block';
+      coursesGrid.style.display = 'none';
+      noResults.style.display = 'none';
+
+      // Имитация загрузки
+      setTimeout(() => {
+        // Фильтрация
+        let filteredCourses = filterCourses();
+        
+        // Сортировка
+        filteredCourses = sortCourses(filteredCourses);
+        
+        // Пагинация
+        const paginatedCourses = paginateCourses(filteredCourses);
+        
+        // Отрисовка
+        if (paginatedCourses.length > 0) {
+          renderCoursesGrid(paginatedCourses);
+          renderPagination(filteredCourses.length);
+          coursesGrid.style.display = 'grid';
+          noResults.style.display = 'none';
+        } else {
+          coursesGrid.style.display = 'none';
+          noResults.style.display = 'block';
+        }
+        
+        loadingIndicator.style.display = 'none';
+      }, 500);
+    }
+
+    // Фильтрация курсов
+    function filterCourses() {
+      return coursesData.filter(course => {
+        // По категории
+        const categoryMatch = currentCategory === 'all' || course.category === currentCategory;
+        
+        // По поисковому запросу
+        const searchMatch = currentSearch === '' || 
+          course.title.toLowerCase().includes(currentSearch) || 
+          course.category.toLowerCase().includes(currentSearch);
+        
+        return categoryMatch && searchMatch;
+      });
+    }
+
+    // Сортировка курсов
+    function sortCourses(courses) {
+      switch(currentSort) {
+        case 'popularity':
+          return [...courses].sort((a, b) => b.popularity - a.popularity);
+        case 'newest':
+          return [...courses].sort((a, b) => new Date(b.date) - new Date(a.date));
+        case 'rating':
+          return [...courses].sort((a, b) => b.rating - a.rating);
+        case 'price-asc':
+          return [...courses].sort((a, b) => a.price - b.price);
+        case 'price-desc':
+          return [...courses].sort((a, b) => b.price - a.price);
+        default:
+          return courses;
+      }
+    }
+
+    // Пагинация курсов
+    function paginateCourses(courses) {
+      const startIndex = (currentPage - 1) * coursesPerPage;
+      const endIndex = startIndex + coursesPerPage;
+      return courses.slice(startIndex, endIndex);
+    }
+
+    // Отрисовка карточек курсов
+    function renderCoursesGrid(courses) {
+      coursesGrid.innerHTML = courses.map(course => `
+        <div class="course-card" data-category="${course.category}">
+          <div class="course-image">
+            <img src="${course.image}" alt="${course.title}">
+            ${course.tag ? `<span class="course-tag">${course.tag}</span>` : ''}
+          </div>
+          <div class="course-content">
+            <div class="course-category">${getCategoryName(course.category)}</div>
+            <h3 class="course-title">${course.title}</h3>
+            <div class="course-meta">
+              <span>${course.duration}</span>
+              <span class="course-rating">★ ${course.rating} (${course.reviews})</span>
+            </div>
+            <div class="course-footer">
+              <div class="course-price ${course.isFree ? 'free' : ''}">
+                ${course.isFree ? 'Бесплатно' : `${course.price.toLocaleString()} ₽/мес`}
+              </div>
+              <button class="enroll-btn">Записаться</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Отрисовка пагинации
+    function renderPagination(totalCourses) {
+      const totalPages = Math.ceil(totalCourses / coursesPerPage);
+      
+      if (totalPages <= 1) {
+        pagination.innerHTML = '';
+        return;
+      }
+      
+      let paginationHTML = '';
+      
+      // Кнопка "Назад"
+      if (currentPage > 1) {
+        paginationHTML += `<button class="page-btn" onclick="changePage(${currentPage - 1})">←</button>`;
+      }
+      
+      // Нумерация страниц
+      for (let i = 1; i <= totalPages; i++) {
+        paginationHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+      }
+      
+      // Кнопка "Вперед"
+      if (currentPage < totalPages) {
+        paginationHTML += `<button class="page-btn" onclick="changePage(${currentPage + 1})">→</button>`;
+      }
+      
+      pagination.innerHTML = paginationHTML;
+    }
+
+    // Смена страницы
+    function changePage(page) {
+      currentPage = page;
+      renderCourses();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Получение читаемого названия категории
+    function getCategoryName(category) {
+      const categories = {
+        programming: 'Программирование',
+        data: 'Анализ данных',
+        security: 'Кибербезопасность',
+        design: 'Дизайн'
+      };
+      return categories[category] || category;
+    }
+
+    // Делаем функцию changePage доступной глобально
+    window.changePage = changePage;
+  </script>
+</body>
+</html>
